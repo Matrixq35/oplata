@@ -42,13 +42,13 @@
     </div>
     
     <script>
-        const tonConnect = new TonConnect.TonConnect();
         const walletAddress = "UQBB_KncTzFv-Lm6CWM7RZDBn8bbQNDs48IUqIACeF1AoELK"; // Укажите ваш TON-адрес
 
-        document.getElementById("donate-btn").addEventListener("click", async function() {
+        document.getElementById("donate-btn").addEventListener("click", function() {
             const amount = 100000000; // 0.1 TON в нанотонах
-            const link = `https://tonhub.com/transfer/${walletAddress}?amount=${amount}&text=Спасибо за поддержку!`;
-            window.open(link, "_blank");
+            const link = `https://tonkeeper.com/transfer/${walletAddress}?amount=${amount}&text=Спасибо за поддержку!`;
+            
+            window.open(link, "_blank", "noopener,noreferrer");
         });
     </script>
 </body>
