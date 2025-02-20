@@ -46,7 +46,7 @@
 
         document.getElementById("donate-btn").addEventListener("click", function() {
             const amount = 100000000; // 0.1 TON в нанотонах
-            const link = `https://tonkeeper.com/transfer/${walletAddress}?amount=${amount}&text=Спасибо за поддержку!`;
+            const link = `ton://transfer/${walletAddress}?amount=${amount}&text=Спасибо за поддержку!`;
             
             window.open(link, "_blank", "noopener,noreferrer");
         });
