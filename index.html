@@ -6,8 +6,6 @@
   <title>Подключение TON Wallet</title>
   <!-- Telegram Web App API -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- TON Connect SDK (убедитесь, что используете актуальную версию) -->
-  <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/tonconnect.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -59,13 +57,16 @@
     <p class="status" id="statusMessage"></p>
   </div>
 
-  <script>
+  <!-- Используем модульный скрипт для корректного импорта TonConnect -->
+  <script type="module">
     // Инициализация Telegram Web App
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Расширяет интерфейс веб-приложения внутри Telegram
+    tg.expand();
 
-    // Инициализация TON Connect SDK
-    // Обязательно укажите корректный URL манифеста для вашего приложения
+    // Импортируем TonConnect из CDN
+    import { TonConnect } from 'https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/tonconnect.min.js';
+
+    // Инициализируем TonConnect с указанием URL манифеста
     const tonConnect = new TonConnect({
       manifestUrl: 'https://matrixq35.github.io/oplata/manifest.json'
     });
@@ -78,14 +79,12 @@
         connectButton.disabled = true;
         statusMessage.textContent = "Подключение TON Wallet...";
         
-        // Запускаем процесс подключения.
-        // Метод connect открывает окно выбора кошелька и возвращает объект с данными.
+        // Запускаем процесс подключения
         const wallet = await tonConnect.connect();
 
         if (wallet && wallet.account) {
-          // Успешное подключение: выводим адрес кошелька
           statusMessage.textContent = "Подключено: " + wallet.account;
-          // Здесь можно реализовать дальнейшую работу с кошельком
+          // Здесь можно добавить дальнейшую логику работы с кошельком
         } else {
           statusMessage.textContent = "Подключение отменено или не удалось";
         }
@@ -97,7 +96,6 @@
       }
     }
 
-    // Назначаем обработчик клика на кнопку
     connectButton.addEventListener("click", connectTONWallet);
   </script>
 </body>
