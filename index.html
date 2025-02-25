@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 </head>
 <body>
-  <button id="ton-connect">Подключить TON Wallet</button>
+  <button id="ton-connect"></button>
 
   <script>
     // Инициализация Telegram Web App
@@ -25,7 +25,7 @@
         // Do something with connectedWallet if needed
         console.log(connectedWallet);
     }
-    
+
     // Call the function
     connectToWallet().catch(error => {
         console.error("Error connecting to wallet:", error);
