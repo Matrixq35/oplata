@@ -56,47 +56,51 @@
     <button id="connectButton">Подключить TON Wallet</button>
     <p class="status" id="statusMessage"></p>
   </div>
-
-  <!-- Используем модульный скрипт для корректного импорта TonConnect -->
-  <script type="module">
+  
+  <!-- Подключаем UMD-версию TON Connect SDK -->
+  <script src="https://unpkg.com/@tonconnect/sdk/dist/tonconnect.umd.js"></script>
+  
+  <script>
     // Инициализация Telegram Web App
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Импортируем TonConnect из CDN
-    import { TonConnect } from 'https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/tonconnect.min.js';
+    // Проверка загрузки SDK
+    if (!window.TonConnect) {
+      console.error("TonConnect SDK не загружен");
+      document.getElementById("statusMessage").textContent = "Ошибка: TonConnect SDK не загружен";
+    } else {
+      // Инициализация TON Connect (убедитесь, что manifest.json доступен по указанному URL)
+      const tonConnect = new TonConnect({
+        manifestUrl: 'https://matrixq35.github.io/oplata/manifest.json'
+      });
 
-    // Инициализируем TonConnect с указанием URL манифеста
-    const tonConnect = new TonConnect({
-      manifestUrl: 'https://matrixq35.github.io/oplata/manifest.json'
-    });
+      const connectButton = document.getElementById("connectButton");
+      const statusMessage = document.getElementById("statusMessage");
 
-    const connectButton = document.getElementById("connectButton");
-    const statusMessage = document.getElementById("statusMessage");
+      async function connectTONWallet() {
+        try {
+          connectButton.disabled = true;
+          statusMessage.textContent = "Подключение TON Wallet…";
+          
+          // Запуск подключения (откроется окно выбора кошелька)
+          const wallet = await tonConnect.connect();
 
-    async function connectTONWallet() {
-      try {
-        connectButton.disabled = true;
-        statusMessage.textContent = "Подключение TON Wallet...";
-        
-        // Запускаем процесс подключения
-        const wallet = await tonConnect.connect();
-
-        if (wallet && wallet.account) {
-          statusMessage.textContent = "Подключено: " + wallet.account;
-          // Здесь можно добавить дальнейшую логику работы с кошельком
-        } else {
-          statusMessage.textContent = "Подключение отменено или не удалось";
+          if (wallet && wallet.account) {
+            statusMessage.textContent = "Подключено: " + wallet.account;
+          } else {
+            statusMessage.textContent = "Подключение отменено или не удалось";
+          }
+        } catch (error) {
+          console.error("Ошибка подключения TON Wallet:", error);
+          statusMessage.textContent = "Ошибка подключения. Проверьте консоль для деталей.";
+        } finally {
+          connectButton.disabled = false;
         }
-      } catch (error) {
-        console.error("Ошибка подключения TON Wallet:", error);
-        statusMessage.textContent = "Ошибка подключения. Проверьте консоль для деталей.";
-      } finally {
-        connectButton.disabled = false;
       }
-    }
 
-    connectButton.addEventListener("click", connectTONWallet);
+      connectButton.addEventListener("click", connectTONWallet);
+    }
   </script>
 </body>
 </html>
