@@ -1,12 +1,8 @@
 {
   "name": "My TON Connect App",
-  "description": "Приложение для подключения к TON Wallet через TON Connect",
+  "description": "Приложение для подключения TON Wallet",
   "version": "1.0.0",
   "url": "https://matrixq35.github.io/oplata",
-  "icons": [
-    "https://yourdomain.com/icon-192.png",
-    "https://yourdomain.com/icon-512.png"
-  ],
   "permissions": [
     "ton_sendTransaction",
     "ton_sign"

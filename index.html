@@ -2,104 +2,44 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Подключение TON Wallet</title>
   <!-- Telegram Web App API -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #f0f2f5;
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .app-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-    }
-    .app-container h1 {
-      margin-bottom: 20px;
-    }
-    .app-container button {
-      font-size: 16px;
-      padding: 12px 24px;
-      background-color: #0088cc;
-      border: none;
-      border-radius: 4px;
-      color: #fff;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .app-container button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-    .status {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #333;
-    }
-  </style>
+  <!-- UMD-версия TON Connect SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk/dist/tonconnect.umd.min.js"></script>
 </head>
 <body>
-  <div class="app-container">
-    <h1>Подключение TON Wallet</h1>
-    <button id="connectButton">Подключить TON Wallet</button>
-    <p class="status" id="statusMessage"></p>
-  </div>
-  
-  <!-- Подключаем UMD-версию TON Connect SDK -->
-  <script src="https://unpkg.com/@tonconnect/sdk/dist/tonconnect.umd.js"></script>
-  
+  <button id="connectBtn">Подключить TON Wallet</button>
+
   <script>
     // Инициализация Telegram Web App
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Проверка загрузки SDK
-    if (!window.TonConnect) {
-      console.error("TonConnect SDK не загружен");
-      document.getElementById("statusMessage").textContent = "Ошибка: TonConnect SDK не загружен";
+    // Проверка загрузки TON Connect SDK
+    if (typeof window.TonConnect === 'undefined') {
+      console.error("TonConnect SDK не загружен!");
+      alert("Ошибка: TonConnect SDK не загружен");
     } else {
-      // Инициализация TON Connect (убедитесь, что manifest.json доступен по указанному URL)
-      const tonConnect = new TonConnect({
+      // Инициализация TON Connect с URL манифеста (укажите ваш реальный домен)
+      const tonConnect = new window.TonConnect({
         manifestUrl: 'https://matrixq35.github.io/oplata/manifest.json'
       });
 
-      const connectButton = document.getElementById("connectButton");
-      const statusMessage = document.getElementById("statusMessage");
-
-      async function connectTONWallet() {
+      // Обработчик нажатия на кнопку
+      document.getElementById('connectBtn').addEventListener('click', async () => {
         try {
-          connectButton.disabled = true;
-          statusMessage.textContent = "Подключение TON Wallet…";
-          
-          // Запуск подключения (откроется окно выбора кошелька)
-          const wallet = await tonConnect.connect();
-
+          const wallet = await tonConnect.connect(); // Открывается окно выбора кошелька
           if (wallet && wallet.account) {
-            statusMessage.textContent = "Подключено: " + wallet.account;
+            alert(`Кошелёк подключен: ${wallet.account}`);
           } else {
-            statusMessage.textContent = "Подключение отменено или не удалось";
+            alert("Подключение отменено или не удалось");
           }
         } catch (error) {
           console.error("Ошибка подключения TON Wallet:", error);
-          statusMessage.textContent = "Ошибка подключения. Проверьте консоль для деталей.";
-        } finally {
-          connectButton.disabled = false;
+          alert("Ошибка подключения. Проверьте консоль для деталей.");
         }
-      }
-
-      connectButton.addEventListener("click", connectTONWallet);
+      });
     }
   </script>
 </body>
